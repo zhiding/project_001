@@ -9,6 +9,7 @@ from HTMLTable import HTMLTable
 import json
 import html2text as ht
 import imgkit
+from PIL import Image
 
 class StockIndexFutureHandler(object):
     def __init__(self):
@@ -97,13 +98,10 @@ def main():
     handler = StockIndexFutureHandler()
     handler.html_table()
     options = {'encoding': 'utf-8'}
-    imgkit.from_file('{}.html'.format(handler.caption), 'out.jpg', options=options)
+    imgkit.from_file('{}.html'.format(handler.caption), '{}.png'.format(handler.caption), options=options)
+    image = Image.open('{}.png'.format(handler.caption))
+    image = image.crop([0, 0, image.size[0] / 2, image.size[1]])
+    image.save('{}.png'.format(handler.caption))
 
 if __name__ == '__main__':
     main()
-
-
-
-
-
-
