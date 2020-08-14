@@ -8,6 +8,7 @@ from bs4 import BeautifulSoup
 from HTMLTable import HTMLTable
 import json
 import html2text as ht
+import imgkit
 
 class StockIndexFutureHandler(object):
     def __init__(self):
@@ -95,6 +96,8 @@ class StockIndexFutureHandler(object):
 def main():
     handler = StockIndexFutureHandler()
     handler.html_table()
+    options = {'encoding': 'utf-8'}
+    imgkit.from_file('{}.html'.format(handler.caption), 'out.jpg', options=options)
 
 if __name__ == '__main__':
     main()
