@@ -19,13 +19,13 @@ class StockIndexFutureHandler(object):
         self.mkt = "069001009"
         self.cmd = 8005022 # 中信
         #self.fd = datetime.now().strftime("%Y-%m-%d")
-        self.fd = "2020-08-13"
+        self.fd = "2020-08-14"
         self.name = 1 # 持仓结构
         self.url = "http://datainterface.eastmoney.com/EM_DataCenter/JS.aspx?type={}&sty={}&stat={}&mkt={}&cmd={}&fd={}&name={}".format(
                     self.type, self.sty, self.stat, self.mkt, self.cmd, self.fd, self.name)
 
     def html_table(self):
-        self.caption = "{} 中信期货持仓结构".format(datetime.now().strftime("%Y-%m-%d"))
+        self.caption = "{} 中信期货持仓结构".format(self.fd)
         table = HTMLTable(caption=self.caption)
         # table head
         table.append_header_rows((
