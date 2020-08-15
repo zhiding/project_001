@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-import os
+import os, sys
 from datetime import datetime
 import requests
 from bs4 import BeautifulSoup
@@ -12,14 +12,13 @@ import imgkit
 from PIL import Image
 
 class StockIndexFutureHandler(object):
-    def __init__(self):
+    def __init__(self, fd=""):
         self.type = "QHCC"
         self.sty = "QHSYCC"
         self.stat = 4
         self.mkt = "069001009"
         self.cmd = 8005022 # 中信
-        #self.fd = datetime.now().strftime("%Y-%m-%d")
-        self.fd = "2020-08-14"
+        self.fd = fd if fd else datetime.now().strftime("%Y-%m-%d")
         self.name = 1 # 持仓结构
         self.url = "http://datainterface.eastmoney.com/EM_DataCenter/JS.aspx?type={}&sty={}&stat={}&mkt={}&cmd={}&fd={}&name={}".format(
                     self.type, self.sty, self.stat, self.mkt, self.cmd, self.fd, self.name)
@@ -89,16 +88,21 @@ class StockIndexFutureHandler(object):
         self.table = table
 
         html = table.to_html()
-        with open('{}.html'.format(self.caption), 'w') as f:
-            f.write(html)
+        self.html = "<!DOCTYPE html><html><head><meta charset='UTF-8'></head><body>{}</body></html>".format(html)
+        #with open('{}.html'.format(self.caption), 'w') as f:
+        #    f.write(self.html)
 
         return 0
 
 def main():
-    handler = StockIndexFutureHandler()
+    if len(sys.argv) == 2:
+        handler = StockIndexFutureHandler(sys.argv[1])
+    else:
+        handler = StockIndexFutureHandler()
     handler.html_table()
-    options = {'encoding': 'utf-8'}
-    imgkit.from_file('{}.html'.format(handler.caption), '{}.png'.format(handler.caption), options=options)
+    options = {'encoding': 'UTF-8'}
+    #imgkit.from_file('{}.html'.format(handler.caption), '{}.png'.format(handler.caption), options=options)
+    imgkit.from_string(handler.html, '{}.png'.format(handler.caption), options=options)
     image = Image.open('{}.png'.format(handler.caption))
     image = image.crop([0, 0, image.size[0] / 2, image.size[1]])
     image.save('{}.png'.format(handler.caption))
