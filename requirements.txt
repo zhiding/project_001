@@ -1,0 +1,6 @@
+requests
+html2text
+bs4
+html-table
+imgkit
+Pillow
