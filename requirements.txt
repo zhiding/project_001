@@ -4,3 +4,5 @@ bs4
 html-table
 imgkit
 Pillow
+flask
+gunicorn
