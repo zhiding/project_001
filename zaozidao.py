@@ -28,9 +28,7 @@ class Zaozhidao(object):
 
         self.article = article
 
-
         self.markdown()
-
 
         self.text = self.text_maker.handle(self.article)
         with open(self.output, 'w') as f:
@@ -50,10 +48,12 @@ class Shibao(Zaozhidao):
         article = self.article
         # head 3
         article = article.replace('<br/>&gt;', '</b><br/><br/><b>+ ')
+        article = article.replace('<br/><p>&gt;', '</b><br/><br/><b>+ ')
         # delete newline
         article = article.replace('<p><br/></p>', '').replace('<p><br/>', '<p>')
         # head 2
         article = article.replace('【资讯导读】</b><br/>', '<h3>资讯导读</h3>').replace(
+                    '</p><br/>【主编视角】</b><br/>', '</b><br/><h3>主编视角</h3>').replace(
                     '<br/><br/>【今日头条】</b><br/>', '</b><br/><h3>今日头条</h3>').replace(
                     '【投资聚焦】</b><br/>', '<h3>投资聚焦</h3>').replace(
                     '【独家参考】</b><br/>', '<h3>独家参考</h3>').replace(
@@ -63,7 +63,7 @@ class Shibao(Zaozhidao):
                     '【资金风向】</b><br/>', '<h3>资金风向</h3>').replace('。<br/>', '。<br/><br/>')
         # delete '------'
         article = article.replace('<br/>------<br/>', '</b><br/><br/>').replace('<br/></b><br/>', '<br/><br/>')
-        print(article)
+        #print(article)
         # title
         article = '<h1>{}</h1>{}<br/>'.format(self.name, article)
         self.article = article
@@ -88,7 +88,7 @@ class Zhongzheng(Zaozhidao):
                     '<p>【产经透视】</p>', '<h3>产经透视</h3>').replace(
                     '<p>【公司动向】</p>', '<h3>公司动向</h3>').replace(
                     '<p>【资金观潮】</p>', '<h3>资金观潮</h3>').replace('。<br/>', '。<br/><br/>')
-        print(article)
+        #print(article)
         # title
         article  = '<h1>{}</h1>{}<br/>'.format(self.name, article)
         self.article = article
@@ -116,7 +116,7 @@ class Shangzheng(Zaozhidao):
                     '<br/>【资金观潮】<br/>', '<br/><h3>资金观潮</h3>').replace('。<br/>', '。<br/><br/>')
         # add newline
         article = article.replace('<br/>------<br/>', '<br/><br/>------<br/><br/>')
-        print(article)
+        #print(article)
         # title
         article  = '<h1>{}</h1>{}<br/>'.format(self.name, article)
         self.article = article
