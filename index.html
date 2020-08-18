@@ -1,0 +1,87 @@
+<style>
+    .axis {
+        font-family: sans-serif;
+        fill: #d35400;
+        font-size: 12px;
+    }
+.line {
+    fill: none;
+    stroke: #f1c40f;
+    stroke-width: 3px;
+}
+.circle {
+    stroke: #e74c3c;
+    stroke-width: 3px;
+    fill: #FFF;
+}
+</style>
+<script src="https://d3js.org/d3.v4.min.js"></script>
+<svg id="north-money"></svg>
+<svg id="chart"></svg>
+
+<script>
+    var data = [
+    ];
+    var width = 500;
+    var height = 500;
+    var globalX = 0;
+    var duration = 250;
+    var max = 500;
+    var step = 10;
+    var chart = d3.select('#chart')
+    .attr('width', width + 50)
+    .attr('height', height + 50);
+    var x = d3.scaleLinear().domain([0, 500]).range([0, 500]);
+    var y = d3.scaleLinear().domain([0, 500]).range([500, 0]);
+    // -----------------------------------
+    var line = d3.line()
+    .x(function(d){ return x(d.x); })
+    .y(function(d){ return y(d.y); });
+    // -----------------------------------
+    // Draw the axis
+    var xAxis = d3.axisBottom().scale(x);
+    var axisX = chart.append('g').attr('class', 'x axis')
+    .attr('transform', 'translate(0, 500)')
+    .call(xAxis);
+    // Append the holder for line chart and circles
+    var g = chart.append('g');
+    // Append path
+    var path = g.append('path');
+    // Main loop
+    function tick() {
+        // Generate new data
+        var point = {
+            x: globalX,
+            y: ((Math.random() * 450 + 50) >> 0)
+        };
+        data.push(point);
+        globalX += step;
+        // Draw new line
+        path.datum(data)
+        .attr('class', 'line')
+        .attr('d', line);
+        // Update circles
+        var circles = g.selectAll('circle')
+        circles.data(data).enter().append('circle')
+        .merge(circles)
+        .attr('r',5)
+        .attr('cx',(function(d){ return x(d.x); }))
+        .attr('cy',(function(d){ return y(d.y); }));
+        circles.exit().remove();
+        // Shift the chart left
+        x.domain([globalX - (max - step), globalX]);
+        axisX.transition()
+        .duration(duration)
+        .ease(d3.easeLinear,.1)
+        .call(xAxis);
+        g.attr('transform', null)
+        .transition()
+        .duration(duration)
+        .ease(d3.easeLinear,.1)
+        .attr('transform', 'translate(' + x(globalX - max) + ')')
+        .on('end', tick)
+        // Remote old data (max 50 points)
+        if (data.length > 50) data.shift();
+    }
+tick();
+</script>
