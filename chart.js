@@ -49,7 +49,7 @@ var scale_index = d3.scale.linear()
 var line_generator = d3.svg.line()
     .x(function(d,i) { return scale_x(i); })
     .y(function(d,i) { return scale_y(d); })
-    .interpolate('cardinal')
+
 
 var g = d3.select('g')
 
@@ -74,11 +74,45 @@ d3.select('#x-axis').selectAll('text')
     .data(trade_time)
     .text(function(d) { return d; })
 
+svg.selectAll('circle')
+    .data(data)
+    .enter()
+    .append('circle')
+    .attr('cx', (d,i) => scale_x(i))
+    .attr('cy', (d,i) => scale_y(d))
+    .attr('r', 3)
+    .attr('fill', 'red')
+    .attr('transform', 'translate(50, 30)')
+    .on('mouseover', mouse_over)
+    .on('mouseout', mouse_out)
+
 
 g.append('g')
     .call(y_axis)
     .append('text')
-    .text('单位：亿元')
+    //.text('单位：亿元')
     .attr('text-anchor', 'end')
     .attr('transform', 'translate(40, -10)')
     //.attr('dy', '1em')
+
+function mouse_out(d, i) {
+    d3.select(this).attr({
+        fill: 'red',
+        r: 3
+    })
+    d3.select('#t' + i + '-' + d + '-' + i).remove()
+}
+
+function mouse_over(d, i) {
+    console.log(d, i)
+    d3.select(this).attr({
+        fill: 'orange',
+        r: 6
+    })
+    svg.append('text').attr({
+        id: 't' + i + '-' + d + '-' + i,
+        x: scale_x(i),
+        y: scale_y(d)
+    })
+    .text([scale_x(i), scale_y(d)])
+}
