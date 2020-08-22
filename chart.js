@@ -25,7 +25,7 @@ var trade_time = [
     ''
 ]
 
-var scale_trade_time = d3.scale.linear()
+var scale_trade_time = d3.scaleLinear()
     .domain([0, 8])
     .range([0, g_width])
 
@@ -34,19 +34,19 @@ d3.select('svg')
     .append('g')
     .attr('transform', 'translate(' + margin.left + ', ' + margin.top + ')')
 
-var scale_x = d3.scale.linear()
+var scale_x = d3.scaleLinear()
     .domain([0, data.length - 1])
     .range([0, g_width])
 
-var scale_y= d3.scale.linear()
+var scale_y= d3.scaleLinear()
     .domain([0, d3.max(data)])
     .range([g_height, 0])
 
-var scale_index = d3.scale.linear()
+var scale_index = d3.scaleLinear()
     .domain([low, high])
     .range([g_height, 0])
 
-var line_generator = d3.svg.line()
+var line_generator = d3.line()
     .x(function(d,i) { return scale_x(i); })
     .y(function(d,i) { return scale_y(d); })
 
@@ -57,9 +57,9 @@ g
     .append('path')
     .attr('d', line_generator(data))
 
-var x_axis = d3.svg.axis().scale(scale_trade_time),
-    y_axis = d3.svg.axis().scale(scale_y).orient('left'),
-    index_axis = d3.svg.axis().scale(scale_index).orient('left');
+var x_axis = d3.axisBottom().scale(scale_trade_time).tickSize(-(width, 0, 0)).tickFormat(""),
+    y_axis = d3.axisLeft().scale(scale_y).tickSize(-(height, 0, 0)).tickFormat(""),
+    index_axis = d3.axisLeft().scale(scale_index);
 
 g.append('g')
     .call(index_axis)
@@ -105,14 +105,14 @@ function mouse_out(d, i) {
 
 function mouse_over(d, i) {
     console.log(d, i)
-    d3.select(this).attr({
+    d3.select(this).style({
         fill: 'orange',
         r: 6
     })
     svg.append('text').attr({
         id: 't' + i + '-' + d + '-' + i,
         x: scale_x(i),
-        y: scale_y(d)
+        y: scale_y(d),
+        value: [scale_x(i), scale_y(d)]
     })
-    .text([scale_x(i), scale_y(d)])
 }
