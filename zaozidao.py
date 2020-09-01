@@ -13,16 +13,27 @@ SHIBAO_URL = "http://www.gushixiaoxi.com/tag/etagid372/0"
 ZHONGZHENG_URL = "http://www.gushixiaoxi.com/tag/etagid373/0"
 SHANGZHENG_URL = "http://www.gushixiaoxi.com/tag/etagid374/0"
 
+cookies = {
+    "srcurl": "687474703a2f2f7777772e67757368697869616f78692e636f6d2f7461672f6574616769643337322f302f",
+    "security_session_mid_verify": "211b25334c5a10beb20d87349ebfc876",
+    "security_session_verify": "ed5089f69c1c29d11a62c84ec270d316"
+}
+
+headers = {
+    'User-agent':'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.113 Safari/537.36'
+}
+
+
 class Zaozhidao(object):
     def markdown(self):
         pass
 
     def run(self):
-        req = requests.get(self.url)
+        req = requests.get(self.url, cookies=cookies, headers=headers)
         soup = BeautifulSoup(req.content, 'html.parser')
         target_url = soup.select('article header h2 a')[0]['href']
 
-        req = requests.get(target_url)
+        req = requests.get(target_url, cookies=cookies, headers=headers)
         soup = BeautifulSoup(req.content, 'html.parser')
         article = str(soup.select('.content_bw')[0])
 
